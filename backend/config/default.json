@@ -1,0 +1,17 @@
+{
+  "host": "127.0.0.1",
+  "port": 8080,
+  "logLevel": "info",
+  "storage": "json",
+  "dataFile": "data/gdpr.json",
+  "frontendDir": "../frontend",
+  "publicDir": "public",
+  "authEnabled": false,
+  "deadlineCheckMinutes": 60,
+  "dsrResponseMonths": 1,
+  "dsrExtensionMonths": 2,
+  "breachNotificationHours": 72,
+  "xsuaa": {
+    "xsappname": "gdpr"
+  }
+}

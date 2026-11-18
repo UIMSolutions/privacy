@@ -1,0 +1,15 @@
+# secrets / local only
+approuter/default-env.json
+# build output
+backend/.dub/
+backend/build/bin/
+backend/dist/
+backend/data/
+backend/*.lst
+approuter/node_modules/
+approuter/resources/*
+!approuter/resources/.gitkeep
+frontend/node_modules/
+frontend/dist/
+mta_archives/
+.mta/

@@ -1,0 +1,106 @@
+.row
+  h6.max.no-margin Data subject requests (Art. 15–21)
+  button(data-open="dlg-new-request")
+    i add
+    span New request
+- if (requests.length == 0)
+  p.grey-text No data subject requests recorded.
+- else
+  .table-wrap
+    table.stripes
+      thead
+        tr
+          th Right
+          th Data subject
+          th Received
+          th Due (Art. 12 (3))
+          th Status
+          th
+      tbody
+        - foreach (r; requests)
+          tr
+            td
+              div #{label(r.type)}
+              .small-text.grey-text #{r.article}
+            td
+              div #{r.subjectName}
+              .small-text.grey-text #{r.subjectEmail}
+            td #{r.receivedOn}
+            td
+              div(class=(r.overdue ? "red-text" : "")) #{r.dueDate}
+              - if (r.status != "completed" && r.status != "rejected")
+                .small-text(class=(r.overdue ? "red-text" : "grey-text")) #{daysText(r.daysLeft)}#{r.extended ? " · extended" : ""}
+              - else
+                .small-text.grey-text closed #{r.closedOn}
+            td
+              span(class="chip small #{tone(r.status)}") #{label(r.status)}
+            td.right-align.nowrap
+              button.circle.transparent(data-open="dlg-req-#{r.ID}", title="Process")
+                i edit
+              button.circle.transparent(hx-post="/web/requests/#{r.ID}/delete", hx-target="#panel", hx-confirm="Delete this request?", title="Delete")
+                i delete
+              dialog(id="dlg-req-#{r.ID}")
+                h5 #{label(r.type)} request – #{r.subjectName}
+                p.small-text.grey-text.left-align #{r.description}
+                - if (r.status == "completed" || r.status == "rejected")
+                  p.left-align Closed on #{r.closedOn}: #{r.resolution}
+                  nav.right-align
+                    button.border(type="button", data-close) Close
+                - else
+                  form.left-align(hx-post="/web/requests/#{r.ID}", hx-target="#panel")
+                    .field.label.suffix.border
+                      select(name="status")
+                        - foreach (s; requestStatuses)
+                          option(value=s, selected=(s == r.status)) #{label(s)}
+                      label Status
+                      i arrow_drop_down
+                    .field.textarea.label.border
+                      textarea(name="resolution") #{r.resolution}
+                      label Resolution / reason (required to close)
+                    p.form-error.red-text(hidden)
+                    nav.right-align
+                      button(type="submit") Save
+                  - if (!r.extended)
+                    form.left-align(hx-post="/web/requests/#{r.ID}/extend", hx-target="#panel")
+                      .field.label.border
+                        input(name="reason", required)
+                        label Reason for extending by two months
+                      p.form-error.red-text(hidden)
+                      nav.right-align
+                        button.border(type="button", data-close) Cancel
+                        button.border(type="submit")
+                          i update
+                          span Extend deadline
+                  - else
+                    p.small-text.left-align Extended: #{r.extensionReason}
+                    nav.right-align
+                      button.border(type="button", data-close) Cancel
+
+dialog#dlg-new-request
+  h5 New data subject request
+  form(hx-post="/web/projects/#{project.ID}/requests", hx-target="#panel")
+    .field.label.suffix.border
+      select(name="type")
+        - foreach (t; requestTypes)
+          option(value=t) #{label(t)} – #{articleOf(t)}
+      label Right exercised
+      i arrow_drop_down
+    .grid.no-space
+      .s12.m6
+        .field.label.border
+          input(name="subjectName", required)
+          label Data subject *
+      .s12.m6
+        .field.label.border
+          input(name="subjectEmail", type="email")
+          label E-mail
+    .field.label.border
+      input(name="receivedOn", type="date")
+      label Received on (default: today)
+    .field.textarea.label.border
+      textarea(name="description")
+      label Description
+    p.form-error.red-text(hidden)
+    nav.right-align
+      button.border(type="button", data-close) Cancel
+      button(type="submit") Record

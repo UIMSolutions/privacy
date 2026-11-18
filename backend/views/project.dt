@@ -1,0 +1,64 @@
+extends layout
+
+block content
+  - import uim.myfiori.presentation.web.helpers;
+  - import uim.myfiori.application.dtos;
+  nav.top-margin
+    a.button.circle.transparent(href="/web", title="Back")
+      i arrow_back
+    .max
+      h5.no-margin #{project.name}
+      .small-text.grey-text
+        span Controller: #{project.controller.length ? project.controller : "–"}
+        span  · DPO: #{project.dpoName.length ? project.dpoName : "–"} #{project.dpoEmail}
+    span(class="chip #{tone(project.status)}") #{label(project.status)}
+    button.border(data-open="dlg-edit-project")
+      i edit
+      span.m.l Edit
+    button.border.red-text(hx-post="/web/projects/#{project.ID}/delete", hx-confirm="Delete project '#{project.name}' with all registers? This cannot be undone.")
+      i delete
+      span.m.l Delete
+
+  - if (project.description.length)
+    p.grey-text #{project.description}
+
+  .tabs.left-align.scroll
+    - foreach (t; projectTabs)
+      a(class=(t == tab ? "active" : ""), hx-get="/web/projects/#{project.ID}/panel/#{t}", hx-target="#panel", hx-push-url="/web/projects/#{project.ID}?tab=#{t}")
+        i #{tabIcon(t)}
+        span #{tabLabel(t)}
+
+  #panel.top-padding
+    include panel
+
+  dialog#dlg-edit-project
+    h5 Edit project
+    form(hx-post="/web/projects/#{project.ID}")
+      .field.label.border
+        input(name="name", required, maxlength="255", value=project.name)
+        label Project name *
+      .field.label.border
+        input(name="controller", maxlength="255", value=project.controller)
+        label Controller (Art. 4 (7))
+      .grid.no-space
+        .s12.m6
+          .field.label.border
+            input(name="dpoName", maxlength="255", value=project.dpoName)
+            label Data protection officer
+        .s12.m6
+          .field.label.border
+            input(name="dpoEmail", type="email", value=project.dpoEmail)
+            label DPO e-mail
+      .field.textarea.label.border
+        textarea(name="description") #{project.description}
+        label Description / scope
+      .field.label.suffix.border
+        select(name="status")
+          - foreach (s; projectStatuses)
+            option(value=s, selected=(s == project.status)) #{label(s)}
+        label Status
+        i arrow_drop_down
+      p.form-error.red-text(hidden)
+      nav.right-align
+        button.border(type="button", data-close) Cancel
+        button(type="submit") Save

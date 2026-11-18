@@ -1,0 +1,25 @@
+.field.label.border
+  input(name="title", required, maxlength="500", value=b.title)
+  label Title *
+.field.textarea.label.border
+  textarea(name="description") #{b.description}
+  label Nature of the breach (Art. 33 (3) a)
+.grid.no-space
+  .s12.m6
+    .field.label.suffix.border
+      select(name="severity")
+        - foreach (s; breachSeverities)
+          option(value=s, selected=(s == b.severity)) #{label(s)} risk
+      label Risk to data subjects
+      i arrow_drop_down
+  .s12.m6
+    .field.label.border
+      input(name="affectedSubjects", type="number", min="0", value="#{b.affectedSubjects}")
+      label Affected data subjects (approx.)
+.field.label.border
+  input(name="dataCategories", value=b.dataCategories)
+  label Categories of personal data concerned
+.field.textarea.label.border
+  textarea(name="measures") #{b.measures}
+  label Measures taken / proposed (Art. 33 (3) d)
+p.form-error.red-text(hidden)

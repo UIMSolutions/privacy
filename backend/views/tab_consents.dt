@@ -1,0 +1,79 @@
+.row
+  h6.max.no-margin Consent register (Art. 7)
+  button(data-open="dlg-new-consent")
+    i add
+    span Record consent
+.field.label.prefix.border.small
+  i search
+  input(name="email", type="search", value=emailFilter, hx-get="/web/projects/#{project.ID}/panel/consents", hx-trigger="input changed delay:300ms, search", hx-target="#consent-rows", hx-select="#consent-rows", hx-swap="outerHTML")
+  label Filter by data subject e-mail
+#consent-rows
+  - if (consents.length == 0)
+    p.grey-text No consents found.
+  - else
+    .table-wrap
+      table.stripes
+        thead
+          tr
+            th Data subject
+            th Purpose
+            th Version
+            th Channel
+            th Given
+            th Status
+            th
+        tbody
+          - foreach (c; consents)
+            tr
+              td #{c.subjectEmail}
+              td #{c.purpose}
+              td #{c.textVersion}
+              td #{label(c.channel)}
+              td #{localTime(c.givenAt)}
+              td
+                - if (c.active)
+                  span.chip.small.green-border.green-text Active
+                - else
+                  span.chip.small.grey-border.grey-text Withdrawn #{localTime(c.withdrawnAt)}
+              td.right-align.nowrap
+                - if (c.active)
+                  button.circle.transparent(hx-post="/web/consents/#{c.ID}/withdraw", hx-target="#panel", hx-confirm="Record withdrawal of this consent (Art. 7 (3))?", title="Withdraw")
+                    i block
+                button.circle.transparent(hx-post="/web/consents/#{c.ID}/delete", hx-target="#panel", hx-confirm="Delete this consent record? The proof of consent is lost.", title="Delete")
+                  i delete
+
+dialog#dlg-new-consent
+  h5 Record consent
+  form(hx-post="/web/projects/#{project.ID}/consents", hx-target="#panel")
+    .field.label.border
+      input(name="subjectEmail", type="email", required)
+      label Data subject e-mail *
+    .field.label.border
+      input(name="purpose", required)
+      label Purpose *
+    .grid.no-space
+      .s12.m6
+        .field.label.border
+          input(name="textVersion")
+          label Version of consent text
+      .s12.m6
+        .field.label.suffix.border
+          select(name="channel")
+            - foreach (ch; consentChannels)
+              option(value=ch) #{label(ch)}
+          label Channel
+          i arrow_drop_down
+    .field.label.suffix.border
+      select(name="activityId")
+        option(value="") – no specific activity –
+        - foreach (a; consentActivities)
+          option(value=a.ID) #{a.name}
+      label Processing activity (consent-based)
+      i arrow_drop_down
+    .field.label.border
+      input(name="givenAt", type="datetime-local")
+      label Given at (default: now)
+    p.form-error.red-text(hidden)
+    nav.right-align
+      button.border(type="button", data-close) Cancel
+      button(type="submit") Record

@@ -1,0 +1,17 @@
+{
+  "name": "gdpr-ui",
+  "version": "1.0.0",
+  "description": "SAP Fiori 3 / UI5 frontend for GDPR privacy projects",
+  "private": true,
+  "scripts": {
+    "start": "ui5 serve --config ui5.yaml --open index.html",
+    "start:mock": "ui5 serve --config ui5-mock.yaml --open index.html",
+    "build": "ui5 build --config ui5.yaml --clean-dest --dest dist",
+    "test": "ui5 serve --config ui5.yaml --open test/testsuite.qunit.html"
+  },
+  "devDependencies": {
+    "@ui5/cli": "^3.11.0",
+    "ui5-middleware-simpleproxy": "^3.2.0",
+    "@sap-ux/ui5-middleware-fe-mockserver": "^2.2.0"
+  }
+}

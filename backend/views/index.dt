@@ -1,0 +1,66 @@
+extends layout
+
+block content
+  - import uim.myfiori.presentation.web.helpers;
+  .row.top-margin
+    h5.max Privacy projects
+    button(data-open="dlg-new-project")
+      i add
+      span New project
+
+  #deadlines(hx-get="/web/deadlines", hx-trigger="load, every 60s")
+
+  - if (projects.length == 0)
+    article.border.round.center-align.padding
+      i.extra shield
+      h6 No GDPR projects yet
+      p Create a project for each controller / data protection programme to keep its records of processing, data subject requests, breaches and consents.
+
+  .grid
+    - foreach (i, p; projects)
+      - auto r = reports[i];
+      .s12.m6.l4
+        a.block(href="/web/projects/#{p.ID}")
+          article.round.border.project-card
+            .row
+              .max
+                h6.no-margin #{p.name}
+                .small-text.grey-text #{p.controller}
+              .score(class=scoreTone(r.complianceScore)) #{percent(r.complianceScore)}
+            .row.wrap.small-text
+              span(class="chip small #{tone(p.status)}") #{label(p.status)}
+              span.chip.small #{r.activitiesTotal} activities
+              span.chip.small #{r.requestsOpen} open requests
+              - if (r.requestsOverdue > 0)
+                span.chip.small.red-border.red-text #{r.requestsOverdue} overdue
+              - if (r.breachesOpen > 0)
+                span.chip.small.orange-border.orange-text #{r.breachesOpen} open breaches
+            .small-text
+              span(class=scoreTone(r.complianceScore)) Compliance #{percent(r.complianceScore)}
+              span.grey-text  · #{r.findings.length} finding(s)
+
+  dialog#dlg-new-project
+    h5 New GDPR project
+    form(hx-post="/web/projects")
+      .field.label.border
+        input(name="name", required, maxlength="255")
+        label Project name *
+      .field.label.border
+        input(name="controller", maxlength="255")
+        label Controller (Art. 4 (7))
+      .grid.no-space
+        .s12.m6
+          .field.label.border
+            input(name="dpoName", maxlength="255")
+            label Data protection officer
+        .s12.m6
+          .field.label.border
+            input(name="dpoEmail", type="email")
+            label DPO e-mail
+      .field.textarea.label.border
+        textarea(name="description")
+        label Description / scope
+      p.form-error.red-text(hidden)
+      nav.right-align
+        button.border(type="button", data-close) Cancel
+        button(type="submit") Create

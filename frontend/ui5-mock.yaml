@@ -1,0 +1,19 @@
+# UI5 tooling with the SAP Fiori elements mock server (no backend needed)
+specVersion: "3.0"
+metadata:
+  name: uim.gdpr
+type: application
+resources:
+  configuration:
+    paths:
+      webapp: .
+server:
+  customMiddleware:
+    - name: sap-fe-mockserver
+      beforeMiddleware: csp
+      configuration:
+        services:
+          - urlPath: /odata/v4/gdpr
+            metadataPath: ./localService/metadata.xml
+            mockdataPath: ./localService/mockdata
+            generateMockData: true

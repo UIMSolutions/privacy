@@ -1,0 +1,20 @@
+/* GDPR Privacy Manager – additions to BeerCSS */
+main.responsive { padding-top: 1rem; padding-bottom: 2rem; }
+.table-wrap { overflow-x: auto; }
+.nowrap { white-space: nowrap; }
+.project-card { height: 100%; transition: box-shadow .2s; }
+a.block { display: block; }
+a.block:hover .project-card { box-shadow: var(--elevate2); }
+.kpi { min-height: 6.5rem; }
+.deadline-box { border-color: var(--error) !important; }
+dialog.large { max-width: 56rem; }
+dialog form { margin-top: 1rem; }
+.form-error:not([hidden]) { padding: .5rem 0; }
+.tabs > a { cursor: pointer; }
+table td { vertical-align: top; }
+ul.alerts { list-style: none; margin: 0; padding: 0; }
+ul.alerts > li { display: flex; align-items: center; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--outline-variant); }
+ul.alerts > li:last-child { border-bottom: none; }
+ul.alerts > li > .max { flex: 1; }
+.score { font-size: 1.5rem; font-weight: 600; white-space: nowrap; }
+dialog { text-align: left; }

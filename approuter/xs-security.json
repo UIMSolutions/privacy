@@ -1,0 +1,24 @@
+{
+  "xsappname": "gdpr",
+  "tenant-mode": "dedicated",
+  "description": "GDPR privacy project management (records of processing, data subject requests, breaches, consents)",
+  "scopes": [
+    { "name": "$XSAPPNAME.Viewer", "description": "Read GDPR projects and registers" },
+    { "name": "$XSAPPNAME.Editor", "description": "Maintain processing activities, requests, breaches and consents" },
+    { "name": "$XSAPPNAME.Admin", "description": "Delete projects" }
+  ],
+  "role-templates": [
+    { "name": "Auditor", "description": "Read-only access (internal audit, supervisory authority inspection)", "scope-references": ["$XSAPPNAME.Viewer"] },
+    { "name": "PrivacyOfficer", "description": "Data protection officer / privacy team", "scope-references": ["$XSAPPNAME.Viewer", "$XSAPPNAME.Editor"] },
+    { "name": "Administrator", "description": "Full access", "scope-references": ["$XSAPPNAME.Viewer", "$XSAPPNAME.Editor", "$XSAPPNAME.Admin"] }
+  ],
+  "role-collections": [
+    { "name": "GDPR_Auditor", "role-template-references": ["$XSAPPNAME.Auditor"] },
+    { "name": "GDPR_PrivacyOfficer", "role-template-references": ["$XSAPPNAME.PrivacyOfficer"] },
+    { "name": "GDPR_Administrator", "role-template-references": ["$XSAPPNAME.Administrator"] }
+  ],
+  "oauth2-configuration": {
+    "token-validity": 3600,
+    "redirect-uris": ["https://*.hana.ondemand.com/**", "http://localhost:5000/**"]
+  }
+}

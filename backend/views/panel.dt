@@ -1,0 +1,12 @@
+- import uim.myfiori.presentation.web.helpers;
+- import uim.myfiori.application.dtos;
+- if (tab == "activities")
+  include tab_activities
+- else if (tab == "requests")
+  include tab_requests
+- else if (tab == "breaches")
+  include tab_breaches
+- else if (tab == "consents")
+  include tab_consents
+- else
+  include tab_report

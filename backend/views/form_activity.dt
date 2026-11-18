@@ -1,0 +1,77 @@
+.field.label.border
+  input(name="name", required, maxlength="255", value=a.name)
+  label Name of the processing *
+.field.textarea.label.border
+  textarea(name="purpose") #{a.purpose}
+  label Purpose(s) of the processing (Art. 30 (1) b)
+.grid.no-space
+  .s12.m6
+    .field.label.suffix.border
+      select(name="legalBasis")
+        - foreach (b; legalBases)
+          option(value=b, selected=(b == a.legalBasis)) #{label(b)} – #{articleOf(b)}
+      label Legal basis (Art. 6)
+      i arrow_drop_down
+  .s12.m6
+    .field.label.suffix.border
+      select(name="status")
+        - foreach (s; activityStatuses)
+          option(value=s, selected=(s == a.status)) #{label(s)}
+      label Status
+      i arrow_drop_down
+.grid.no-space
+  .s12.m6
+    .field.label.border
+      input(name="dataCategories", value=a.dataCategories)
+      label Categories of personal data
+  .s12.m6
+    .field.label.border
+      input(name="dataSubjects", value=a.dataSubjects)
+      label Categories of data subjects
+  .s12.m6
+    .field.label.border
+      input(name="recipients", value=a.recipients)
+      label Recipients (Art. 30 (1) d)
+  .s12.m6
+    .field.label.border
+      input(name="retentionPeriod", value=a.retentionPeriod)
+      label Retention period (Art. 30 (1) f)
+.field.textarea.label.border
+  textarea(name="toms") #{a.toms}
+  label Technical & organisational measures (Art. 32)
+h6.small Risk criteria (DPIA screening, Art. 35)
+.grid.no-space
+  .s12.m6
+    label.checkbox
+      input(type="checkbox", name="specialCategories", value="true", checked=a.specialCategories)
+      span Special categories (Art. 9/10)
+    input(type="hidden", name="specialCategories", value="false")
+  .s12.m6
+    label.checkbox
+      input(type="checkbox", name="largeScale", value="true", checked=a.largeScale)
+      span Large-scale processing
+    input(type="hidden", name="largeScale", value="false")
+  .s12.m6
+    label.checkbox
+      input(type="checkbox", name="systematicMonitoring", value="true", checked=a.systematicMonitoring)
+      span Systematic monitoring
+    input(type="hidden", name="systematicMonitoring", value="false")
+  .s12.m6
+    label.checkbox
+      input(type="checkbox", name="automatedDecisions", value="true", checked=a.automatedDecisions)
+      span Automated decisions / profiling (Art. 22)
+    input(type="hidden", name="automatedDecisions", value="false")
+  .s12.m6
+    label.checkbox
+      input(type="checkbox", name="thirdCountryTransfer", value="true", checked=a.thirdCountryTransfer)
+      span Transfer to third countries (Art. 44 ff.)
+    input(type="hidden", name="thirdCountryTransfer", value="false")
+  .s12.m6
+    label.checkbox
+      input(type="checkbox", name="dpiaCompleted", value="true", checked=a.dpiaCompleted)
+      span DPIA completed
+    input(type="hidden", name="dpiaCompleted", value="false")
+.field.label.border
+  input(name="transferSafeguard", value=a.transferSafeguard)
+  label Transfer safeguard (adequacy decision, SCC, BCR …)
+p.form-error.red-text(hidden)

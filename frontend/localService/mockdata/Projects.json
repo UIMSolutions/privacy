@@ -1,0 +1,13 @@
+[
+  {
+    "dpoName": "Erika Muster",
+    "dpoEmail": "dpo@acme.example",
+    "modifiedAt": "2026-11-18T21:47:07Z",
+    "createdAt": "2026-11-18T21:47:07Z",
+    "name": "ACME GDPR 2026",
+    "controller": "ACME GmbH",
+    "ID": "839c60d4-6a99-41f8-8377-67786de4044e",
+    "description": "",
+    "status": "planned"
+  }
+]

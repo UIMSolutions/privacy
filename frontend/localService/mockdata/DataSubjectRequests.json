@@ -1,0 +1,42 @@
+[
+  {
+    "subjectName": "Max Mustermann",
+    "closedOn": null,
+    "extensionReason": "",
+    "modifiedAt": "2026-11-18T21:47:07Z",
+    "extended": false,
+    "article": "Art. 15",
+    "subjectEmail": "max@example.org",
+    "createdAt": "2026-11-18T21:47:07Z",
+    "projectId": "839c60d4-6a99-41f8-8377-67786de4044e",
+    "resolution": "",
+    "daysLeft": -17,
+    "ID": "a3fcd183-bdf2-4add-b83a-baaf9e76a1ea",
+    "type": "access",
+    "description": "",
+    "receivedOn": "2026-10-01",
+    "dueDate": "2026-11-01",
+    "status": "received",
+    "overdue": true
+  },
+  {
+    "subjectName": "Eva",
+    "closedOn": "2026-11-18",
+    "extensionReason": "complex",
+    "modifiedAt": "2026-11-18T21:47:33Z",
+    "extended": true,
+    "article": "Art. 17",
+    "subjectEmail": "eva@example.org",
+    "createdAt": "2026-11-18T21:47:33Z",
+    "projectId": "839c60d4-6a99-41f8-8377-67786de4044e",
+    "resolution": "erased",
+    "daysLeft": 0,
+    "ID": "ec952cff-83a4-4970-b541-40498833234d",
+    "type": "erasure",
+    "description": "",
+    "receivedOn": "2026-11-18",
+    "dueDate": "2027-02-18",
+    "status": "completed",
+    "overdue": false
+  }
+]

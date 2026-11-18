@@ -1,0 +1,17 @@
+- import uim.myfiori.presentation.web.helpers;
+- if (alerts.length)
+  article.round.border.deadline-box
+    .row
+      i.red-text alarm
+      h6.max.no-margin Deadlines (#{alerts.length})
+    ul.alerts
+      - foreach (a; alerts)
+        - auto isBreach = a.kind == "breach";
+        - auto chipClass = a.missed ? "chip small red-border red-text" : "chip small orange-border orange-text";
+        - auto target = "/web/projects/" ~ a.projectId ~ "?tab=" ~ (isBreach ? "breaches" : "requests");
+        li
+          i(class=(a.missed ? "red-text" : "orange-text")) #{isBreach ? "warning" : "person_search"}
+          .max
+            a.link(href=target) #{a.title}
+            .small-text.grey-text #{a.projectName} · deadline #{isBreach ? localTime(a.deadline) : a.deadline}
+          span(class=chipClass) #{isBreach ? hoursText(a.remaining) : daysText(a.remaining)}

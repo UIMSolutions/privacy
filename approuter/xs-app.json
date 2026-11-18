@@ -1,0 +1,48 @@
+{
+  "welcomeFile": "/index.html",
+  "authenticationMethod": "route",
+  "logout": {
+    "logoutEndpoint": "/do/logout",
+    "logoutPage": "/index.html"
+  },
+  "routes": [
+    {
+      "source": "^/odata/(.*)$",
+      "target": "/odata/$1",
+      "destination": "gdpr-backend",
+      "authenticationType": "xsuaa",
+      "csrfProtection": true,
+      "scope": [
+        "$XSAPPNAME.Viewer"
+      ]
+    },
+    {
+      "source": "^/web(.*)$",
+      "target": "/web$1",
+      "destination": "gdpr-backend",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false,
+      "scope": [
+        "$XSAPPNAME.Viewer"
+      ]
+    },
+    {
+      "source": "^/public/(.*)$",
+      "target": "/public/$1",
+      "destination": "gdpr-backend",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/health$",
+      "target": "/health",
+      "destination": "gdpr-backend",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^/(.*)$",
+      "target": "$1",
+      "localDir": "resources",
+      "authenticationType": "xsuaa"
+    }
+  ]
+}

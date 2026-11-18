@@ -1,0 +1,181 @@
+<mvc:View controllerName="uim.gdpr.controller.Project" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
+  xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
+  <Page id="projectPage" title="{name}" showNavButton="true" navButtonPress=".onNavBack">
+    <headerContent>
+      <Button icon="sap-icon://edit" tooltip="{i18n>edit}" press=".onEditProject"/>
+      <Button icon="sap-icon://delete" tooltip="{i18n>delete}" type="Reject" press=".onDeleteProject"/>
+    </headerContent>
+    <content>
+      <ObjectHeader title="{name}" number="{= ${report>/complianceScore} !== undefined ? ${report>/complianceScore} + ' %' : '' }"
+        numberUnit="{i18n>compliance}" numberState="{ path: 'report>/complianceScore', formatter: '.formatter.scoreState' }"
+        responsive="true">
+        <statuses>
+          <ObjectStatus text="{ path: 'status', formatter: '.formatter.enumText' }" state="{ path: 'status', formatter: '.formatter.state' }"/>
+        </statuses>
+        <attributes>
+          <ObjectAttribute title="{i18n>controller}" text="{controller}"/>
+          <ObjectAttribute title="{i18n>dpo}" text="{dpoName} {dpoEmail}"/>
+          <ObjectAttribute text="{description}"/>
+        </attributes>
+      </ObjectHeader>
+
+      <IconTabBar id="tabs" expandable="false" stretchContentHeight="false" class="sapUiResponsiveContentPadding">
+        <items>
+          <!-- compliance report (function import GetProjectReport) -->
+          <IconTabFilter key="report" icon="sap-icon://shield" text="{i18n>compliance}">
+            <l:HorizontalLayout allowWrapping="true">
+              <GenericTile class="sapUiTinyMargin" header="{i18n>activities}" subheader="{report>/activitiesActive} {i18n>activeLower}" press=".onTab" app:key="activities" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+                <TileContent><NumericContent value="{report>/activitiesTotal}" withMargin="false"/></TileContent>
+              </GenericTile>
+              <GenericTile class="sapUiTinyMargin" header="{i18n>dpiaOpen}" subheader="Art. 35">
+                <TileContent><NumericContent value="{report>/dpiaOpen}" valueColor="{= ${report>/dpiaOpen} > 0 ? 'Error' : 'Good' }" withMargin="false"/></TileContent>
+              </GenericTile>
+              <GenericTile class="sapUiTinyMargin" header="{i18n>requestsOverdue}" subheader="{report>/requestsOpen} {i18n>openLower}">
+                <TileContent><NumericContent value="{report>/requestsOverdue}" valueColor="{= ${report>/requestsOverdue} > 0 ? 'Error' : 'Good' }" withMargin="false"/></TileContent>
+              </GenericTile>
+              <GenericTile class="sapUiTinyMargin" header="{i18n>breachesUnreported}" subheader="{report>/breachesOpen} {i18n>openLower}">
+                <TileContent><NumericContent value="{report>/breachesNotReported}" valueColor="{= ${report>/breachesNotReported} > 0 ? 'Error' : 'Good' }" withMargin="false"/></TileContent>
+              </GenericTile>
+              <GenericTile class="sapUiTinyMargin" header="{i18n>consents}" subheader="{report>/consentsWithdrawn} {i18n>withdrawnLower}">
+                <TileContent><NumericContent value="{report>/consentsActive}" withMargin="false"/></TileContent>
+              </GenericTile>
+            </l:HorizontalLayout>
+            <List headerText="{i18n>findings}" items="{report>/findings}" noDataText="{i18n>noFindings}">
+              <StandardListItem title="{report>text}" description="{report>article}"
+                info="{ path: 'report>severity', formatter: '.formatter.enumText' }"
+                infoState="{ path: 'report>severity', formatter: '.formatter.state' }"/>
+            </List>
+          </IconTabFilter>
+
+          <!-- record of processing activities (Art. 30) -->
+          <IconTabFilter key="activities" icon="sap-icon://list" text="{i18n>activities}">
+            <Table id="activitiesTable" items="{ path: 'activities', sorter: { path: 'name' } }" noDataText="{i18n>noData}">
+              <headerToolbar><OverflowToolbar><Title text="{i18n>ropa}"/><ToolbarSpacer/>
+                <Button icon="sap-icon://add" text="{i18n>add}" press=".onCreateActivity"/></OverflowToolbar></headerToolbar>
+              <columns>
+                <Column><Text text="{i18n>name}"/></Column>
+                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>legalBasis}"/></Column>
+                <Column><Text text="{i18n>risk}"/></Column>
+                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="DPIA"/></Column>
+                <Column><Text text="{i18n>status}"/></Column>
+                <Column hAlign="End" width="10rem"/>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <ObjectIdentifier title="{name}" text="{purpose}"/>
+                    <Text text="{ path: 'legalBasis', formatter: '.formatter.enumText' } ({legalBasisArticle})"/>
+                    <ObjectStatus text="{ path: 'riskLevel', formatter: '.formatter.enumText' }" state="{ path: 'riskLevel', formatter: '.formatter.state' }"/>
+                    <ObjectStatus text="{= ${dpiaRequired} ? (${dpiaCompleted} ? 'completed' : 'required') : 'not required' }" state="{= ${dpiaRequired} &amp;&amp; !${dpiaCompleted} ? 'Error' : 'None' }"/>
+                    <ObjectStatus text="{ path: 'status', formatter: '.formatter.enumText' }" state="{ path: 'status', formatter: '.formatter.state' }"/>
+                    <HBox justifyContent="End">
+                      <Button icon="sap-icon://accept" tooltip="{i18n>activate}" type="Transparent" visible="{= ${status} !== 'active' }" press=".onActivate"/>
+                      <Button icon="sap-icon://edit" tooltip="{i18n>edit}" type="Transparent" press=".onEditActivity"/>
+                      <Button icon="sap-icon://delete" tooltip="{i18n>delete}" type="Transparent" press=".onDelete"/>
+                    </HBox>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </IconTabFilter>
+
+          <!-- data subject requests (Art. 15–21) -->
+          <IconTabFilter key="requests" icon="sap-icon://customer" text="{i18n>requests}" count="{report>/requestsOpen}">
+            <Table id="requestsTable" items="{ path: 'requests' }" noDataText="{i18n>noData}">
+              <headerToolbar><OverflowToolbar><Title text="{i18n>requests}"/><ToolbarSpacer/>
+                <Button icon="sap-icon://add" text="{i18n>add}" press=".onCreateRequest"/></OverflowToolbar></headerToolbar>
+              <columns>
+                <Column><Text text="{i18n>right}"/></Column>
+                <Column><Text text="{i18n>dataSubject}"/></Column>
+                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>received}"/></Column>
+                <Column><Text text="{i18n>due}"/></Column>
+                <Column><Text text="{i18n>status}"/></Column>
+                <Column hAlign="End" width="10rem"/>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <ObjectIdentifier title="{ path: 'type', formatter: '.formatter.enumText' }" text="{article}"/>
+                    <ObjectIdentifier title="{subjectName}" text="{subjectEmail}"/>
+                    <Text text="{receivedOn}"/>
+                    <ObjectStatus text="{dueDate}" state="{= ${overdue} ? 'Error' : 'None' }"
+                      tooltip="{ parts: ['daysLeft', 'status'], formatter: '.formatter.daysLeft' }"/>
+                    <ObjectStatus text="{ path: 'status', formatter: '.formatter.enumText' }" state="{ path: 'status', formatter: '.formatter.state' }"/>
+                    <HBox justifyContent="End" visible="{ path: 'status', formatter: '.formatter.isOpenRequest' }">
+                      <Button icon="sap-icon://past" tooltip="{i18n>extend}" type="Transparent" visible="{= !${extended} }" press=".onExtendRequest"/>
+                      <Button icon="sap-icon://complete" tooltip="{i18n>closeRequest}" type="Transparent" press=".onCloseRequest"/>
+                      <Button icon="sap-icon://delete" tooltip="{i18n>delete}" type="Transparent" press=".onDelete"/>
+                    </HBox>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </IconTabFilter>
+
+          <!-- personal data breaches (Art. 33/34) -->
+          <IconTabFilter key="breaches" icon="sap-icon://alert" text="{i18n>breaches}" count="{report>/breachesOpen}" iconColor="{= ${report>/breachesNotReported} > 0 ? 'Negative' : 'Default' }">
+            <Table id="breachesTable" items="{ path: 'breaches' }" noDataText="{i18n>noData}">
+              <headerToolbar><OverflowToolbar><Title text="{i18n>breaches}"/><ToolbarSpacer/>
+                <Button icon="sap-icon://add" text="{i18n>recordBreach}" type="Reject" press=".onCreateBreach"/></OverflowToolbar></headerToolbar>
+              <columns>
+                <Column><Text text="{i18n>title}"/></Column>
+                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>detected}"/></Column>
+                <Column><Text text="{i18n>risk}"/></Column>
+                <Column><Text text="{i18n>authority}"/></Column>
+                <Column><Text text="{i18n>status}"/></Column>
+                <Column hAlign="End" width="10rem"/>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <ObjectIdentifier title="{title}" text="{affectedSubjects} affected"/>
+                    <Text text="{ path: 'detectedAt', formatter: '.formatter.timestamp' }"/>
+                    <ObjectStatus text="{ path: 'severity', formatter: '.formatter.enumText' }" state="{ path: 'severity', formatter: '.formatter.state' }"/>
+                    <ObjectStatus text="{ parts: ['authorityNotificationRequired', 'reportedAt', 'hoursLeft'], formatter: '.formatter.authorityText' }"
+                      state="{= ${deadlineMissed} ? 'Error' : 'None' }"/>
+                    <ObjectStatus text="{ path: 'status', formatter: '.formatter.enumText' }" state="{ path: 'status', formatter: '.formatter.state' }"/>
+                    <HBox justifyContent="End" visible="{= ${status} !== 'closed' }">
+                      <Button icon="sap-icon://official-service" tooltip="{i18n>reportBreach}" type="Transparent" visible="{= ${authorityNotificationRequired} &amp;&amp; !${reportedAt} }" press=".onBreachAction" app:action="ReportBreach" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"/>
+                      <Button icon="sap-icon://email" tooltip="{i18n>notifySubjects}" type="Transparent" visible="{= ${subjectNotificationRequired} &amp;&amp; !${subjectsNotifiedAt} }" press=".onBreachAction" app:action="NotifyBreachSubjects" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"/>
+                      <Button icon="sap-icon://edit" tooltip="{i18n>measures}" type="Transparent" press=".onEditBreach"/>
+                      <Button icon="sap-icon://complete" tooltip="{i18n>close}" type="Transparent" press=".onBreachAction" app:action="CloseBreach" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"/>
+                    </HBox>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </IconTabFilter>
+
+          <!-- consents (Art. 7) -->
+          <IconTabFilter key="consents" icon="sap-icon://approvals" text="{i18n>consents}">
+            <Table id="consentsTable" items="{ path: 'consents' }" growing="true" noDataText="{i18n>noData}">
+              <headerToolbar><OverflowToolbar><Title text="{i18n>consents}"/><ToolbarSpacer/>
+                <SearchField width="16rem" search=".onSearchConsent" placeholder="{i18n>email}"/>
+                <Button icon="sap-icon://add" text="{i18n>add}" press=".onCreateConsent"/></OverflowToolbar></headerToolbar>
+              <columns>
+                <Column><Text text="{i18n>dataSubject}"/></Column>
+                <Column><Text text="{i18n>purpose}"/></Column>
+                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>version}"/></Column>
+                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>given}"/></Column>
+                <Column><Text text="{i18n>status}"/></Column>
+                <Column hAlign="End" width="6rem"/>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Text text="{subjectEmail}"/>
+                    <Text text="{purpose}"/>
+                    <Text text="{textVersion}"/>
+                    <Text text="{ path: 'givenAt', formatter: '.formatter.timestamp' }"/>
+                    <ObjectStatus text="{= ${active} ? 'active' : 'withdrawn' }" state="{= ${active} ? 'Success' : 'None' }"/>
+                    <Button icon="sap-icon://decline" tooltip="{i18n>withdraw}" type="Transparent" visible="{active}" press=".onWithdrawConsent"/>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </IconTabFilter>
+        </items>
+      </IconTabBar>
+    </content>
+  </Page>
+</mvc:View>

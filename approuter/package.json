@@ -1,0 +1,9 @@
+{
+  "name": "gdpr-approuter",
+  "version": "1.0.0",
+  "description": "SAP approuter: XSUAA login, routing to backend and Fiori app",
+  "private": true,
+  "engines": { "node": ">=18" },
+  "scripts": { "start": "node node_modules/@sap/approuter/approuter.js" },
+  "dependencies": { "@sap/approuter": "^16.0.0" }
+}

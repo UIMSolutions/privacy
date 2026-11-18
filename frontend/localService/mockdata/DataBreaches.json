@@ -1,0 +1,23 @@
+[
+  {
+    "affectedSubjects": 250,
+    "reportedAt": null,
+    "authorityNotificationRequired": true,
+    "hoursLeft": 34,
+    "severity": "high",
+    "deadlineMissed": false,
+    "createdAt": "2026-11-18T21:47:07Z",
+    "title": "Laptop stolen",
+    "notificationDeadline": "2026-11-20T08:00:00Z",
+    "subjectNotificationRequired": true,
+    "projectId": "839c60d4-6a99-41f8-8377-67786de4044e",
+    "modifiedAt": "2026-11-18T21:47:07Z",
+    "dataCategories": "",
+    "detectedAt": "2026-11-17T08:00:00Z",
+    "description": "",
+    "measures": "",
+    "ID": "a8d73f63-6f7a-4bc6-97d7-2a92d53651a4",
+    "subjectsNotifiedAt": null,
+    "status": "open"
+  }
+]

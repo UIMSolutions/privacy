@@ -1,0 +1,34 @@
+<mvc:View controllerName="uim.gdpr.controller.Main" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
+  <Page id="mainPage" title="{i18n>appTitle}">
+    <content>
+      <Table id="projectsTable" growing="true" growingThreshold="25"
+        items="{ path: '/Projects', sorter: { path: 'name' } }"
+        noDataText="{i18n>noProjects}">
+        <headerToolbar>
+          <OverflowToolbar>
+            <Title text="{i18n>projects}" level="H2"/>
+            <ToolbarSpacer/>
+            <SearchField width="16rem" search=".onSearch" placeholder="{i18n>search}"/>
+            <Button icon="sap-icon://add" text="{i18n>newProject}" type="Emphasized" press=".onCreateProject"/>
+          </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+          <Column><Text text="{i18n>name}"/></Column>
+          <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>controller}"/></Column>
+          <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>dpo}"/></Column>
+          <Column hAlign="End"><Text text="{i18n>status}"/></Column>
+        </columns>
+        <items>
+          <ColumnListItem type="Navigation" press=".onOpenProject">
+            <cells>
+              <ObjectIdentifier title="{name}" text="{description}"/>
+              <Text text="{controller}"/>
+              <Text text="{dpoName} {dpoEmail}"/>
+              <ObjectStatus text="{ path: 'status', formatter: '.formatter.enumText' }" state="{ path: 'status', formatter: '.formatter.state' }"/>
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+  </Page>
+</mvc:View>

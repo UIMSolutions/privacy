@@ -1,0 +1,35 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title #{pageTitle} · GDPR Privacy Manager
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/beercss@3.7.12/dist/cdn/beer.min.css")
+    script(type="module", src="https://cdn.jsdelivr.net/npm/beercss@3.7.12/dist/cdn/beer.min.js")
+    script(type="module", src="https://cdn.jsdelivr.net/npm/material-dynamic-colors@1.1.2/dist/cdn/material-dynamic-colors.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.4/dist/htmx.min.js")
+    link(rel="stylesheet", href="/public/app.css")
+    script(src="/public/app.js", defer)
+  body(hx-headers=csrf)
+    header.primary.fixed
+      nav
+        a.button.circle.transparent(href="/web", title="Projects")
+          i shield_person
+        h6.max GDPR Privacy Manager
+        a.button.transparent.m.l(href="/web")
+          i folder
+          span Projects
+        a.button.transparent.m.l(href="/ui/index.html")
+          i apps
+          span Fiori app
+        a.button.transparent.m.l(href="/odata/v4/gdpr/$metadata", target="_blank")
+          i api
+          span OData
+        span.chip.border.white-text.white-border
+          i person
+          span #{userName}
+    main.responsive
+      block content
+    footer.center-align.small-text.grey-text.padding
+      span GDPR (EU 2016/679) · Art. 30 records · Art. 12–21 data subject rights · Art. 33/34 breaches · Art. 7 consent
+    #toast.snackbar

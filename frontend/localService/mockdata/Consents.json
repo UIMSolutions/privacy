@@ -1,0 +1,30 @@
+[
+  {
+    "givenAt": "2026-11-18T21:47:42Z",
+    "textVersion": "",
+    "modifiedAt": "2026-11-18T21:47:42Z",
+    "createdAt": "2026-11-18T21:47:42Z",
+    "subjectEmail": "c@d.example",
+    "active": true,
+    "projectId": "839c60d4-6a99-41f8-8377-67786de4044e",
+    "activityId": "",
+    "channel": "app",
+    "ID": "5ca5db7a-1824-4c86-b6db-d4f5ca73f264",
+    "withdrawnAt": null,
+    "purpose": "Loyalty programme"
+  },
+  {
+    "givenAt": "2026-11-18T21:47:07Z",
+    "textVersion": "v3",
+    "modifiedAt": "2026-11-18T21:47:07Z",
+    "createdAt": "2026-11-18T21:47:07Z",
+    "subjectEmail": "a@b.example",
+    "active": true,
+    "projectId": "839c60d4-6a99-41f8-8377-67786de4044e",
+    "activityId": "",
+    "channel": "web",
+    "ID": "a8242a2d-33ac-4790-976a-006c61ac2723",
+    "withdrawnAt": null,
+    "purpose": "Newsletter"
+  }
+]

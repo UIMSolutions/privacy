@@ -1,0 +1,82 @@
+.row
+  h6.max.no-margin Personal data breaches (Art. 33/34)
+  button.error(data-open="dlg-new-breach")
+    i add_alert
+    span Record breach
+- if (breaches.length == 0)
+  p.grey-text No breaches recorded.
+- else
+  .table-wrap
+    table.stripes
+      thead
+        tr
+          th Breach
+          th Detected
+          th Risk
+          th Authority (72 h)
+          th Data subjects
+          th Status
+          th
+      tbody
+        - foreach (b; breaches)
+          tr
+            td
+              div #{b.title}
+              .small-text.grey-text #{b.affectedSubjects} affected#{b.dataCategories.length ? " · " ~ b.dataCategories : ""}
+            td #{localTime(b.detectedAt)}
+            td
+              span(class="chip small #{tone(b.severity)}") #{label(b.severity)}
+            td
+              - if (!b.authorityNotificationRequired)
+                span.grey-text not required
+              - else if (b.reportedAt.length)
+                div(class=(b.deadlineMissed ? "orange-text" : "green-text")) #{localTime(b.reportedAt)}
+                - if (b.deadlineMissed)
+                  .small-text.orange-text late – document reasons
+              - else
+                div(class=(b.deadlineMissed ? "red-text" : "orange-text")) by #{localTime(b.notificationDeadline)}
+                .small-text(class=(b.deadlineMissed ? "red-text" : "orange-text")) #{hoursText(b.hoursLeft)}
+            td
+              - if (!b.subjectNotificationRequired)
+                span.grey-text not required
+              - else if (b.subjectsNotifiedAt.length)
+                span.green-text #{localTime(b.subjectsNotifiedAt)}
+              - else
+                span.red-text pending (Art. 34)
+            td
+              span(class="chip small #{tone(b.status)}") #{label(b.status)}
+            td.right-align.nowrap
+              - if (b.status != "closed")
+                - if (b.authorityNotificationRequired && b.reportedAt.length == 0)
+                  button.circle.transparent(hx-post="/web/breaches/#{b.ID}/report", hx-target="#panel", hx-confirm="Record notification of the supervisory authority now?", title="Reported to authority")
+                    i account_balance
+                - if (b.subjectNotificationRequired && b.subjectsNotifiedAt.length == 0)
+                  button.circle.transparent(hx-post="/web/breaches/#{b.ID}/notify", hx-target="#panel", hx-confirm="Record communication to the data subjects now?", title="Data subjects notified")
+                    i campaign
+                button.circle.transparent(hx-post="/web/breaches/#{b.ID}/close", hx-target="#panel", hx-confirm="Close this breach?", title="Close")
+                  i task_alt
+                button.circle.transparent(data-open="dlg-br-#{b.ID}", title="Edit")
+                  i edit
+                - if (b.status == "open" && b.reportedAt.length == 0)
+                  button.circle.transparent(hx-post="/web/breaches/#{b.ID}/delete", hx-target="#panel", hx-confirm="Delete (false alarm)?", title="Delete")
+                    i delete
+                dialog(id="dlg-br-#{b.ID}")
+                  h5 Edit breach
+                  form.left-align(hx-post="/web/breaches/#{b.ID}", hx-target="#panel")
+                    include form_breach
+                    nav.right-align
+                      button.border(type="button", data-close) Cancel
+                      button(type="submit") Save
+
+dialog#dlg-new-breach
+  h5 Record personal data breach
+  - auto b = DataBreachDto.init;
+  - b.severity = "medium";
+  form(hx-post="/web/projects/#{project.ID}/breaches", hx-target="#panel")
+    .field.label.border
+      input(name="detectedAt", type="datetime-local")
+      label Detected at (default: now)
+    include form_breach
+    nav.right-align
+      button.border(type="button", data-close) Cancel
+      button(type="submit") Record

@@ -1,0 +1,66 @@
+.grid
+  .s12.m4
+    article.round.border.center-align
+      h4(class=scoreTone(report.complianceScore)) #{percent(report.complianceScore)}
+      .grey-text Compliance score
+  .s12.m8
+    .grid
+      .s6.l3
+        article.round.border.kpi
+          .small-text.grey-text Processing activities
+          h5.no-margin #{report.activitiesTotal}
+          .small-text #{report.activitiesActive} active · #{report.activitiesHighRisk} high risk
+      .s6.l3
+        article.round.border.kpi
+          .small-text.grey-text DPIA (Art. 35)
+          h5.no-margin #{report.dpiaRequired}
+          .small-text(class=(report.dpiaOpen ? "red-text" : "")) #{report.dpiaOpen} not completed
+      .s6.l3
+        article.round.border.kpi
+          .small-text.grey-text Data subject requests
+          h5.no-margin #{report.requestsOpen}
+          .small-text(class=(report.requestsOverdue ? "red-text" : "")) open · #{report.requestsOverdue} overdue
+      .s6.l3
+        article.round.border.kpi
+          .small-text.grey-text Data breaches
+          h5.no-margin #{report.breachesOpen}
+          .small-text(class=(report.breachesNotReported ? "red-text" : "")) open · #{report.breachesNotReported} unreported
+      .s6.l3
+        article.round.border.kpi
+          .small-text.grey-text Consents
+          h5.no-margin #{report.consentsActive}
+          .small-text active · #{report.consentsWithdrawn} withdrawn
+      .s6.l3
+        article.round.border.kpi
+          .small-text.grey-text Third-country transfers
+          h5.no-margin(class=(report.transfersWithoutSafeguard ? "red-text" : "")) #{report.transfersWithoutSafeguard}
+          .small-text without safeguard
+.grid
+  .s12.l7
+    article.round.border
+      h6 Findings
+      - if (report.findings.length == 0)
+        p.green-text
+          i check_circle
+          span  No open findings.
+      - else
+        ul.alerts
+          - foreach (f; report.findings)
+            li
+              i(class=(f.severity == "high" ? "red-text" : f.severity == "medium" ? "orange-text" : "grey-text")) #{f.severity == "low" ? "info" : "error"}
+              .max
+                div #{f.text}
+                .small-text.grey-text #{f.article}
+              span(class="chip small #{tone(f.severity)}") #{label(f.severity)}
+  .s12.l5
+    article.round.border
+      h6 Recent activity (audit trail)
+      - if (events.length == 0)
+        p.grey-text No changes since the server started.
+      - else
+        ul.alerts
+          - foreach (e; events)
+            li
+              .max
+                div #{e.type}
+                .small-text.grey-text #{localTime(e.occurredAt)} #{e.details}
